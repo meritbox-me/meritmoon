@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MeritMoon — Forge Your Mind of Steel</title>
+  <meta name="description" content="Theravadan Samatha & Vipassana meditation app. Discipline, consistency, and real transformation. No shortcuts. Only merit." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Ambient canvas background -->
+  <canvas id="starfield"></canvas>
+  <!-- Nimitta light burst overlay -->
+  <div class="nimitta-overlay"></div>
+
+  <!-- ═══════════════════════════════ NAV ═══════════════════════════════ -->
+  <nav class="nav" id="nav">
+    <div class="nav__inner">
+      <a href="#" class="nav__logo">
+        <div class="logo-moon" id="nav-moon">
+          <div class="moon-face">
+            <div class="moon-eye moon-eye--left"></div>
+            <div class="moon-eye moon-eye--right"></div>
+            <div class="moon-smile"></div>
+            <div class="moon-blush moon-blush--left"></div>
+            <div class="moon-blush moon-blush--right"></div>
+          </div>
+          <div class="moon-glow-ring"></div>
+        </div>
+        <span class="nav__brand">MeritMoon</span>
+      </a>
+      <ul class="nav__links" id="nav-links">
+        <li><a href="#commitment">Commitment</a></li>
+        <li><a href="#features">Courses</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#pricing">Merit</a></li>
+        <li><a href="#testimonials">Voices</a></li>
+        <li><a href="#download" class="nav__cta-btn">Begin Journey</a></li>
+      </ul>
+      <button class="nav__hamburger" id="hamburger" aria-label="menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════ HERO ══════════════════════════════ -->
+  <section class="hero" id="hero">
+    <div class="hero__moon-container">
+      <div class="hero__moon" id="hero-moon">
+        <div class="hero__moon-surface"></div>
+        <div class="moon-face hero-face">
+          <div class="moon-eye moon-eye--left"></div>
+          <div class="moon-eye moon-eye--right"></div>
+          <div class="moon-smile"></div>
+          <div class="moon-blush moon-blush--left"></div>
+          <div class="moon-blush moon-blush--right"></div>
+          <div class="piti-sparkle ps1">✦</div>
+          <div class="piti-sparkle ps2">✧</div>
+          <div class="piti-sparkle ps3">✦</div>
+          <div class="piti-sparkle ps4">✧</div>
+          <div class="piti-sparkle ps5">✦</div>
+        </div>
+        <div class="hero__moon-halo h1"></div>
+        <div class="hero__moon-halo h2"></div>
+        <div class="hero__moon-halo h3"></div>
+      </div>
+      <div class="hero__moon-reflection"></div>
+    </div>
+
+    <div class="hero__content">
+      <p class="hero__eyebrow">Theravāda · Samatha · Vipassanā</p>
+      <h1 class="hero__title">
+        <span class="hero__title-line line-fade" data-delay="0">Forge a Mind</span>
+        <span class="hero__title-line hero__title-gradient line-fade" data-delay="150">of Steel.</span>
+      </h1>
+      <p class="hero__subtitle line-fade" data-delay="300">
+        Not another app for soft-focus breathing.<br/>
+        MeritMoon is for warriors who sit in the dark<br/>
+        and emerge <em>luminous</em>.
+      </p>
+      <div class="hero__actions line-fade" data-delay="450">
+        <a href="#download" class="btn btn--primary">
+          <span class="btn__inner">Begin the Path</span>
+          <span class="btn__glow"></span>
+        </a>
+        <a href="#features" class="btn btn--ghost">See the Courses</a>
+      </div>
+      <div class="hero__badges line-fade" data-delay="600">
+        <div class="store-badge">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" fill="currentColor"/></svg>
+          App Store
+        </div>
+        <div class="store-badge">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3.18 23.76a2.5 2.5 0 0 0 2.73-.3l13.05-7.53-3.36-3.36-12.42 11.19zm-1.7-20.2C1.18 3.97 1 4.5 1 5.1v13.8c0 .6.18 1.13.48 1.54l.08.08L9.3 12.5v-.17L1.56 3.48l-.08.08zM20.49 10.8l-2.79-1.6-3.14 3.14 3.14 3.14 2.81-1.62a2.5 2.5 0 0 0 0-4.06zM3.18.24L16.23 7.77l-3.36 3.36L.53.54A2.5 2.5 0 0 1 3.18.24z" fill="currentColor"/></svg>
+          Play Store
+        </div>
+      </div>
+    </div>
+
+    <div class="hero__scroll-hint">
+      <div class="scroll-line"></div>
+      <span>scroll</span>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ STREAK BANNER ══════════════════════ -->
+  <section class="streak-banner">
+    <div class="streak-banner__track" id="ticker-track">
+      <div class="streak-banner__items" id="ticker-items">
+        <span>✦ 128,400 days sat in silence</span>
+        <span>☽ 4,200 warriors active tonight</span>
+        <span>✦ 312 courses completed this week</span>
+        <span>☽ ₿ Merits flowing to 18 monasteries</span>
+        <span>✦ 99.1% who finish Day 7 never quit</span>
+        <span>☽ 5,800 consecutive streaks alive</span>
+        <span>✦ 128,400 days sat in silence</span>
+        <span>☽ 4,200 warriors active tonight</span>
+        <span>✦ 312 courses completed this week</span>
+        <span>☽ ₿ Merits flowing to 18 monasteries</span>
+        <span>✦ 99.1% who finish Day 7 never quit</span>
+        <span>☽ 5,800 consecutive streaks alive</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ COMMITMENT ════════════════════════ -->
+  <section class="commitment" id="commitment">
+    <div class="section-container">
+      <div class="section-label">The Warrior's Vow</div>
+      <h2 class="section-title">
+        Most apps want you <em>comfortable</em>.<br/>
+        We want you <span class="grad-text">transformed</span>.
+      </h2>
+      <p class="section-sub">
+        Samatha and Vipassana are not weekend hobbies. They are ancient paths that demand everything — and return everything. MeritMoon holds you to that standard.
+      </p>
+
+      <div class="commitment__grid">
+        <div class="commitment__card" data-index="0">
+          <div class="commitment__card-icon">
+            <div class="icon-moon-small"></div>
+          </div>
+          <div class="commitment__streak-display">
+            <span class="streak-number" data-target="365">0</span>
+            <span class="streak-unit">day streak</span>
+          </div>
+          <h3>Break the chain,<br/>restart the forge.</h3>
+          <p>Miss a day? The path resets. Not as punishment — as truth. Real samādhi is built by unbroken continuity. Every sit counts. Every single one.</p>
+          <div class="card-glow-bar"></div>
+        </div>
+
+        <div class="commitment__card commitment__card--feature" data-index="1">
+          <div class="commitment__card-icon">
+            <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" width="50" height="50">
+              <circle cx="30" cy="30" r="28" stroke="url(#g1)" stroke-width="1.5" stroke-dasharray="4 3"/>
+              <circle cx="30" cy="30" r="18" fill="url(#g2)" opacity="0.15"/>
+              <path d="M30 12 L33 25 L46 25 L36 33 L39 46 L30 38 L21 46 L24 33 L14 25 L27 25 Z" fill="url(#g3)"/>
+              <defs>
+                <linearGradient id="g1" x1="0" y1="0" x2="60" y2="60">
+                  <stop offset="0%" stop-color="#C0C8D8"/>
+                  <stop offset="100%" stop-color="#3DBA7E"/>
+                </linearGradient>
+                <linearGradient id="g2" x1="0" y1="0" x2="60" y2="60">
+                  <stop offset="0%" stop-color="#C0C8D8"/>
+                  <stop offset="100%" stop-color="#3DBA7E"/>
+                </linearGradient>
+                <linearGradient id="g3" x1="0" y1="0" x2="60" y2="60">
+                  <stop offset="0%" stop-color="#E8C97E"/>
+                  <stop offset="100%" stop-color="#C9445A"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <h3>Complete a course.<br/>Own it forever.</h3>
+          <p>No rental. No expiry. When you earn a course through discipline — or purchase it — it is yours. Permanently unlocked. A monument to your practice.</p>
+          <div class="featured-badge">Core Vow</div>
+          <div class="card-glow-bar"></div>
+        </div>
+
+        <div class="commitment__card" data-index="2">
+          <div class="commitment__card-icon">
+            <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" width="50" height="50">
+              <path d="M30 5 C18 5 8 15 8 27 C8 40 20 52 30 56 C40 52 52 40 52 27 C52 15 42 5 30 5Z" stroke="url(#dg)" stroke-width="1.2" fill="none"/>
+              <circle cx="30" cy="27" r="8" fill="url(#dg2)" opacity="0.8"/>
+              <path d="M22 27 Q30 18 38 27 Q30 36 22 27Z" fill="url(#dg3)" opacity="0.6"/>
+              <defs>
+                <linearGradient id="dg" x1="0" y1="0" x2="60" y2="60"><stop offset="0%" stop-color="#C0C8D8"/><stop offset="100%" stop-color="#3DBA7E"/></linearGradient>
+                <linearGradient id="dg2" x1="0" y1="0" x2="60" y2="60"><stop offset="0%" stop-color="#E8C97E" stop-opacity="0.6"/><stop offset="100%" stop-color="#C9445A" stop-opacity="0.3"/></linearGradient>
+                <linearGradient id="dg3" x1="0" y1="0" x2="60" y2="60"><stop offset="0%" stop-color="#E8C97E"/><stop offset="100%" stop-color="#C9445A"/></linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <h3>Ancient lineage,<br/>modern precision.</h3>
+          <p>Courses designed with practicing Theravāda monastics. Not wellness influencers. Not coaches. Real Dhamma teachers from real monasteries.</p>
+          <div class="card-glow-bar"></div>
+        </div>
+      </div>
+
+      <!-- Live commitment counter -->
+      <div class="commitment__live-bar">
+        <div class="live-stat">
+          <span class="live-num" data-target="47283">0</span>
+          <span class="live-label">Warriors training</span>
+        </div>
+        <div class="live-divider">☽</div>
+        <div class="live-stat">
+          <span class="live-num" data-target="2341">0</span>
+          <span class="live-label">Sitting right now</span>
+        </div>
+        <div class="live-divider">☽</div>
+        <div class="live-stat">
+          <span class="live-num" data-target="18">0</span>
+          <span class="live-label">Monasteries supported</span>
+        </div>
+        <div class="live-divider">☽</div>
+        <div class="live-stat">
+          <span class="live-num" data-target="99">0</span>
+          <span class="live-label">% free without ads</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ FEATURES / COURSES CAROUSEL ═══════ -->
+  <section class="features" id="features">
+    <div class="section-container">
+      <div class="section-label">The Path Ahead</div>
+      <h2 class="section-title">Renowned Courses &amp;<br/><span class="grad-text">Sacred Techniques</span></h2>
+      <p class="section-sub">Each course authored by a lineage master. Each sits you deeper than the last.</p>
+    </div>
+
+    <div class="carousel-wrapper" id="features-carousel">
+      <div class="carousel-track" id="features-track">
+
+        <div class="course-card">
+          <div class="course-card__glow"></div>
+          <div class="course-card__tag">Samatha · Beginner</div>
+          <div class="course-card__moon-icon">
+            <div class="mini-moon"></div>
+          </div>
+          <h3 class="course-card__title">Ānāpānasati<br/><small>Breath as the Object</small></h3>
+          <p class="course-card__desc">The foundational path. 10 days. Single-pointed concentration on the breath at the nostril tip. The entry gate to all jhāna.</p>
+          <div class="course-card__meta">
+            <span class="meta-tag free">Free with streak</span>
+            <span class="meta-days">10 days</span>
+          </div>
+          <div class="course-card__progress">
+            <div class="progress-bar" style="--prog: 82%"></div>
+            <span>82% of beginners unlock this</span>
+          </div>
+        </div>
+
+        <div class="course-card course-card--featured">
+          <div class="course-card__glow featured-glow"></div>
+          <div class="course-card__tag">Samatha · Intermediate</div>
+          <div class="course-card__moon-icon">
+            <div class="mini-moon"></div>
+          </div>
+          <h3 class="course-card__title">The Four Jhānas<br/><small>Absorption States</small></h3>
+          <p class="course-card__desc">Enter and stabilise the four rūpajhāna. Pīti arises. Then sukha. Then equanimity so vast it silences the world.</p>
+          <div class="course-card__meta">
+            <span class="meta-tag free">Free with streak</span>
+            <span class="meta-days">21 days</span>
+          </div>
+          <div class="course-card__badge">Most Sought</div>
+          <div class="course-card__progress">
+            <div class="progress-bar" style="--prog: 58%"></div>
+            <span>58% who attempt reach jhāna 1</span>
+          </div>
+        </div>
+
+        <div class="course-card">
+          <div class="course-card__glow"></div>
+          <div class="course-card__tag">Vipassanā · Intermediate</div>
+          <div class="course-card__moon-icon">
+            <div class="mini-moon"></div>
+          </div>
+          <h3 class="course-card__title">Vipassanā Rising<br/><small>Insight into the Three Marks</small></h3>
+          <p class="course-card__desc">Penetrate anicca, dukkha, and anattā. Built on stable samādhi. This is the knife that severs the root.</p>
+          <div class="course-card__meta">
+            <span class="meta-tag free">Free with streak</span>
+            <span class="meta-days">14 days</span>
+          </div>
+          <div class="course-card__progress">
+            <div class="progress-bar" style="--prog: 44%"></div>
+            <span>44% experience nimitta by day 5</span>
+          </div>
+        </div>
+
+        <div class="course-card">
+          <div class="course-card__glow"></div>
+          <div class="course-card__tag">Samatha · Advanced</div>
+          <div class="course-card__moon-icon">
+            <div class="mini-moon"></div>
+          </div>
+          <h3 class="course-card__title">Kasiṇa Meditation<br/><small>Total Object Mastery</small></h3>
+          <p class="course-card__desc">The most demanding samatha path. Expand a nimitta to fill the universe. The training ground of the supernormal.</p>
+          <div class="course-card__meta">
+            <span class="meta-tag premium">Premium unlock</span>
+            <span class="meta-days">30 days</span>
+          </div>
+          <div class="course-card__progress">
+            <div class="progress-bar" style="--prog: 21%"></div>
+            <span>Only 21% reach full nimitta</span>
+          </div>
+        </div>
+
+        <div class="course-card">
+          <div class="course-card__glow"></div>
+          <div class="course-card__tag">Mettā · All Levels</div>
+          <div class="course-card__moon-icon">
+            <div class="mini-moon"></div>
+          </div>
+          <h3 class="course-card__title">Mettā Bhāvanā<br/><small>Boundless Loving-Kindness</small></h3>
+          <p class="course-card__desc">Radiate loving-kindness without limit. The heart becomes vast. Anger loses its foothold. Peace becomes structural.</p>
+          <div class="course-card__meta">
+            <span class="meta-tag free">Free with streak</span>
+            <span class="meta-days">7 days</span>
+          </div>
+          <div class="course-card__progress">
+            <div class="progress-bar" style="--prog: 91%"></div>
+            <span>91% report deep peace by day 3</span>
+          </div>
+        </div>
+
+        <div class="course-card">
+          <div class="course-card__glow"></div>
+          <div class="course-card__tag">Vipassanā · Advanced</div>
+          <div class="course-card__moon-icon">
+            <div class="mini-moon"></div>
+          </div>
+          <h3 class="course-card__title">Mahāsī Satipaṭṭhāna<br/><small>Body-Noting Mastery</small></h3>
+          <p class="course-card__desc">The Mahāsī method at its purest. Moment-to-moment noting of arising and passing. The warrior's razor.</p>
+          <div class="course-card__meta">
+            <span class="meta-tag premium">Premium unlock</span>
+            <span class="meta-days">28 days</span>
+          </div>
+          <div class="course-card__progress">
+            <div class="progress-bar" style="--prog: 33%"></div>
+            <span>33% reach dissolution stage</span>
+          </div>
+        </div>
+
+      </div>
+
+      <button class="carousel-btn carousel-btn--prev" id="feat-prev" aria-label="previous">‹</button>
+      <button class="carousel-btn carousel-btn--next" id="feat-next" aria-label="next">›</button>
+      <div class="carousel-dots" id="feat-dots"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ ABOUT ════════════════════════════ -->
+  <section class="about" id="about">
+    <div class="section-container about__grid">
+      <div class="about__visual">
+        <div class="about__moon-scene">
+          <div class="about__big-moon">
+            <div class="moon-face about-face">
+              <div class="moon-eye moon-eye--left"></div>
+              <div class="moon-eye moon-eye--right"></div>
+              <div class="moon-smile"></div>
+              <div class="moon-blush moon-blush--left"></div>
+              <div class="moon-blush moon-blush--right"></div>
+            </div>
+            <div class="about__moon-ring ar1"></div>
+            <div class="about__moon-ring ar2"></div>
+          </div>
+          <div class="about__meditator">
+            <svg viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg" width="160">
+              <ellipse cx="60" cy="92" rx="40" ry="6" fill="url(#sg)" opacity="0.3"/>
+              <circle cx="60" cy="22" r="10" fill="url(#sg2)"/>
+              <path d="M50 32 Q60 28 70 32 L75 52 Q60 58 45 52 Z" fill="url(#sg2)"/>
+              <path d="M45 52 Q35 58 28 72 Q36 72 45 66 Z" fill="url(#sg2)" opacity="0.8"/>
+              <path d="M75 52 Q85 58 92 72 Q84 72 75 66 Z" fill="url(#sg2)" opacity="0.8"/>
+              <ellipse cx="60" cy="78" rx="28" ry="12" fill="url(#sg2)" opacity="0.9"/>
+              <defs>
+                <linearGradient id="sg" x1="0" y1="0" x2="120" y2="0"><stop offset="0%" stop-color="#C0C8D8"/><stop offset="100%" stop-color="#3DBA7E"/></linearGradient>
+                <linearGradient id="sg2" x1="0" y1="0" x2="120" y2="100"><stop offset="0%" stop-color="#8B92A0" stop-opacity="0.7"/><stop offset="100%" stop-color="#2A7054" stop-opacity="0.5"/></linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <div class="about__ground-glow"></div>
+        </div>
+      </div>
+
+      <div class="about__content">
+        <div class="section-label">Who We Are</div>
+        <h2 class="section-title">We sat in silence<br/>and built <span class="grad-text">MeritMoon</span>.</h2>
+        <p>We are not a wellness startup chasing funding rounds. We are practitioners who got tired of apps that make meditation comfortable instead of <em>real</em>.</p>
+        <p>The Theravāda tradition has preserved these techniques for 2,600 years. They work. Not because they're trending — because they're true. Our role is to transmit that truth with integrity and accessibility.</p>
+        <p>MeritMoon was built with guidance from practicing monks and nuns across Mahāsī, Pa-Auk, and Ajahn Chah lineages. Every course has monastic roots. Every subscription generates real dana to real monasteries.</p>
+        <div class="about__pillars">
+          <div class="pillar">
+            <span class="pillar-icon">☽</span>
+            <span>Lineage-verified teachings</span>
+          </div>
+          <div class="pillar">
+            <span class="pillar-icon">✦</span>
+            <span>Zero ads, ever</span>
+          </div>
+          <div class="pillar">
+            <span class="pillar-icon">☽</span>
+            <span>Open source streak engine</span>
+          </div>
+          <div class="pillar">
+            <span class="pillar-icon">✦</span>
+            <span>Monastic oversight board</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ SOULSBORNE SECTION ═══════════════ -->
+  <section class="souls-section">
+    <div class="section-container souls-section__inner">
+      <div class="souls-quote">
+        <div class="souls-quote__mark">❝</div>
+        <blockquote>
+          You didn't die. You learned what not to do.<br/>
+          Sit again. Sit better.
+        </blockquote>
+        <cite>— The MeritMoon Way</cite>
+      </div>
+      <div class="souls-cards">
+        <div class="souls-card">
+          <span class="souls-card__icon">⚔</span>
+          <h4>Reset is not failure</h4>
+          <p>Every Dark Souls player knows — dying teaches more than winning. Day 1 again is not shame. It is the forge.</p>
+        </div>
+        <div class="souls-card">
+          <span class="souls-card__icon">🜂</span>
+          <h4>The mind is your bonfire</h4>
+          <p>Light it daily. Let it anchor your world. When it goes dark, return. Kindle it again. The flame remembers you.</p>
+        </div>
+        <div class="souls-card">
+          <span class="souls-card__icon">◈</span>
+          <h4>No idle state</h4>
+          <p>Free users earn wisdom. Paid users earn merits passively. There is no version of MeritMoon where you lose.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ PRICING / MERIT ═══════════════════ -->
+  <section class="pricing" id="pricing">
+    <div class="section-container">
+      <div class="section-label">Choose Your Path</div>
+      <h2 class="section-title">There is no wrong choice.<br/><span class="grad-text">Only degrees of merit.</span></h2>
+      <p class="section-sub">Free is real. Premium is powerful. Both are wins. This is how we structured it so no one gets left behind.</p>
+
+      <div class="pricing__grid">
+
+        <div class="pricing__card">
+          <div class="pricing__moon-deco">
+            <div class="price-moon pm--crescent"></div>
+          </div>
+          <h3 class="pricing__plan">The Seeker</h3>
+          <div class="pricing__price">
+            <span class="price-amount">Free</span>
+            <span class="price-period">Always & forever</span>
+          </div>
+          <ul class="pricing__features">
+            <li><span class="feat-check">✦</span> All courses accessible via consistent streaks</li>
+            <li><span class="feat-check">✦</span> Courses completed are yours forever</li>
+            <li><span class="feat-check">✦</span> Break streak → reset to Day 1</li>
+            <li><span class="feat-check">✦</span> Daily guided sits, timers &amp; bells</li>
+            <li><span class="feat-check">✦</span> Community access</li>
+            <li><span class="feat-check">✦</span> Zero ads. Zero data selling.</li>
+            <li class="feat-none"><span>—</span> Streak protection</li>
+            <li class="feat-none"><span>—</span> Passive merit generation</li>
+          </ul>
+          <a href="#download" class="btn btn--ghost btn--full">Begin Free</a>
+          <p class="pricing__footnote">Discipline is the price. Nothing else.</p>
+        </div>
+
+        <div class="pricing__card pricing__card--featured">
+          <div class="pricing__moon-deco">
+            <div class="price-moon pm--full">
+              <div class="moon-face price-face">
+                <div class="moon-eye moon-eye--left"></div>
+                <div class="moon-eye moon-eye--right"></div>
+                <div class="moon-smile"></div>
+                <div class="moon-blush moon-blush--left"></div>
+                <div class="moon-blush moon-blush--right"></div>
+              </div>
+            </div>
+          </div>
+          <div class="featured-ribbon">Most Merit</div>
+          <h3 class="pricing__plan">The Warrior</h3>
+          <div class="pricing__price">
+            <span class="price-amount">$9<small>.99</small></span>
+            <span class="price-period">/ month</span>
+          </div>
+          <ul class="pricing__features">
+            <li><span class="feat-check gold">✦</span> Everything in Seeker</li>
+            <li><span class="feat-check gold">✦</span> Streak protection — life happens</li>
+            <li><span class="feat-check gold">✦</span> Instant unlock for any course</li>
+            <li><span class="feat-check gold">✦</span> <strong>Passive merit stream</strong> — portion of your sub donated to course monasteries</li>
+            <li><span class="feat-check gold">✦</span> Dana certificate — your name in the monastery's merit book</li>
+            <li><span class="feat-check gold">✦</span> Offline course downloads</li>
+            <li><span class="feat-check gold">✦</span> Monastic Q&amp;A access (monthly)</li>
+            <li><span class="feat-check gold">✦</span> Early access to new lineages</li>
+          </ul>
+          <a href="#download" class="btn btn--primary btn--full">
+            <span class="btn__inner">Begin Warrior Path</span>
+            <span class="btn__glow"></span>
+          </a>
+          <p class="pricing__footnote">Part of every subscription goes directly to the monastery behind each course you practice.</p>
+        </div>
+
+        <div class="pricing__card">
+          <div class="pricing__moon-deco">
+            <div class="price-moon pm--gibbous"></div>
+          </div>
+          <h3 class="pricing__plan">The Patron</h3>
+          <div class="pricing__price">
+            <span class="price-amount">$24<small>.99</small></span>
+            <span class="price-period">/ month</span>
+          </div>
+          <ul class="pricing__features">
+            <li><span class="feat-check ruby">✦</span> Everything in Warrior</li>
+            <li><span class="feat-check ruby">✦</span> Amplified dana — 40% of sub to monasteries</li>
+            <li><span class="feat-check ruby">✦</span> Named sponsor in app's merit dedication</li>
+            <li><span class="feat-check ruby">✦</span> Private retreat recommendations</li>
+            <li><span class="feat-check ruby">✦</span> Direct monastery correspondence</li>
+            <li><span class="feat-check ruby">✦</span> Annual merit-dedication ceremony inclusion</li>
+            <li><span class="feat-check ruby">✦</span> Beta access to all features</li>
+            <li><span class="feat-check ruby">✦</span> Priority onboarding call</li>
+          </ul>
+          <a href="#download" class="btn btn--ghost btn--full">Become a Patron</a>
+          <p class="pricing__footnote">For those who wish their material wealth to generate immaterial merit without ceasing.</p>
+        </div>
+
+      </div>
+
+      <div class="dana-banner">
+        <div class="dana-banner__moon-row">
+          <div class="mini-moon"></div>
+          <div class="mini-moon" style="opacity:0.6;transform:scale(0.7)"></div>
+          <div class="mini-moon" style="opacity:0.4;transform:scale(0.5)"></div>
+        </div>
+        <h3>Dana — The Merit that Outlasts Everything</h3>
+        <p>In Theravāda, generosity (dāna) is the first of the ten perfections. Every Warrior or Patron subscription automatically generates dāna to the monastics who preserve these lineages. You don't need to be practicing today for merit to flow. The act of supporting the Dhamma accrues its own fruit — continuously, silently, like moonlight.</p>
+        <div class="dana-banner__stats">
+          <div class="dana-stat">
+            <span class="dana-num">$48,200</span>
+            <span class="dana-label">donated to monasteries this year</span>
+          </div>
+          <div class="dana-stat">
+            <span class="dana-num">18</span>
+            <span class="dana-label">monasteries supported</span>
+          </div>
+          <div class="dana-stat">
+            <span class="dana-num">100%</span>
+            <span class="dana-label">of dana reaches monasteries directly</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ TESTIMONIALS ══════════════════════ -->
+  <section class="testimonials" id="testimonials">
+    <div class="section-container">
+      <div class="section-label">Voices from the Sit</div>
+      <h2 class="section-title">Real warriors.<br/><span class="grad-text">Real transformation.</span></h2>
+
+      <div class="testi-carousel-wrapper" id="testi-carousel">
+        <div class="testi-track" id="testi-track">
+
+          <div class="testi-card">
+            <div class="testi-stars">✦ ✦ ✦ ✦ ✦</div>
+            <blockquote>"I reset 4 times before I made it to day 21. The 5th run, I hit the first jhāna. I actually cried. Nothing has ever changed my life like this app."</blockquote>
+            <div class="testi-author">
+              <div class="testi-avatar ta--1"></div>
+              <div>
+                <strong>Takeshi M.</strong>
+                <span>Day 87 streak · Completed: The Four Jhānas</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="testi-card">
+            <div class="testi-stars">✦ ✦ ✦ ✦ ✦</div>
+            <blockquote>"I was skeptical of an app for serious meditation. Then I read the teaching notes for Ānāpānasati. These weren't written by content writers. These came from a monk. I subscribed immediately."</blockquote>
+            <div class="testi-author">
+              <div class="testi-avatar ta--2"></div>
+              <div>
+                <strong>Nadia V.</strong>
+                <span>Day 143 streak · Patron · 3 courses completed</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="testi-card">
+            <div class="testi-stars">✦ ✦ ✦ ✦ ✦</div>
+            <blockquote>"The reset mechanic broke me twice. The third time I treated each sit like my last. I hit 200 days. My mind is sharper than it was at 25. I'm 41."</blockquote>
+            <div class="testi-author">
+              <div class="testi-avatar ta--3"></div>
+              <div>
+                <strong>Carlos R.</strong>
+                <span>Day 211 streak · Free · 2 courses owned forever</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="testi-card">
+            <div class="testi-stars">✦ ✦ ✦ ✦ ✦</div>
+            <blockquote>"Knowing part of my subscription goes to the Pa-Auk monastery — the actual monastery behind the Kasiṇa course — makes me feel connected to something ancient. That alone is worth the price."</blockquote>
+            <div class="testi-author">
+              <div class="testi-avatar ta--4"></div>
+              <div>
+                <strong>Priya S.</strong>
+                <span>Day 56 streak · Warrior · Dana flowing to Pa-Auk</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="testi-card">
+            <div class="testi-stars">✦ ✦ ✦ ✦ ✦</div>
+            <blockquote>"I travel constantly for work. The streak protection saved me during a 48-hour flight delay. But honestly? Those resets before I subscribed taught me more about impermanence than any teaching note."</blockquote>
+            <div class="testi-author">
+              <div class="testi-avatar ta--5"></div>
+              <div>
+                <strong>Amir K.</strong>
+                <span>Day 178 streak · Warrior · Mettā & Jhāna completed</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <button class="carousel-btn carousel-btn--prev" id="testi-prev" aria-label="previous">‹</button>
+        <button class="carousel-btn carousel-btn--next" id="testi-next" aria-label="next">›</button>
+        <div class="carousel-dots" id="testi-dots"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ CTA / DOWNLOAD ═══════════════════ -->
+  <section class="download-cta" id="download">
+    <div class="cta-moon-bg">
+      <div class="cta-moon">
+        <div class="moon-face cta-face">
+          <div class="moon-eye moon-eye--left"></div>
+          <div class="moon-eye moon-eye--right"></div>
+          <div class="moon-smile"></div>
+          <div class="moon-blush moon-blush--left"></div>
+          <div class="moon-blush moon-blush--right"></div>
+        </div>
+        <div class="cta-moon-ring cr1"></div>
+        <div class="cta-moon-ring cr2"></div>
+        <div class="cta-moon-ring cr3"></div>
+      </div>
+    </div>
+    <div class="section-container cta-content">
+      <div class="section-label">The Night Is Waiting</div>
+      <h2 class="section-title">
+        Sit down.<br/>
+        Close your eyes.<br/>
+        <span class="grad-text">See the light within.</span>
+      </h2>
+      <p class="section-sub">Download MeritMoon. Begin Day 1. The moon will be there when you open your eyes.</p>
+      <div class="cta-btns">
+        <a href="#" class="cta-store-btn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" fill="currentColor"/></svg>
+          <div>
+            <small>Download on the</small>
+            <strong>App Store</strong>
+          </div>
+        </a>
+        <a href="#" class="cta-store-btn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3.18 23.76a2.5 2.5 0 0 0 2.73-.3l13.05-7.53-3.36-3.36-12.42 11.19zm-1.7-20.2C1.18 3.97 1 4.5 1 5.1v13.8c0 .6.18 1.13.48 1.54l.08.08L9.3 12.5v-.17L1.56 3.48l-.08.08zM20.49 10.8l-2.79-1.6-3.14 3.14 3.14 3.14 2.81-1.62a2.5 2.5 0 0 0 0-4.06zM3.18.24L16.23 7.77l-3.36 3.36L.53.54A2.5 2.5 0 0 1 3.18.24z" fill="currentColor"/></svg>
+          <div>
+            <small>Get it on</small>
+            <strong>Google Play</strong>
+          </div>
+        </a>
+      </div>
+      <p class="cta-tagline">Free to begin. Yours to keep. Merits to earn.</p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ FOOTER ════════════════════════════ -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <div class="footer__brand">
+        <div class="logo-moon logo-moon--sm">
+          <div class="moon-face">
+            <div class="moon-eye moon-eye--left"></div>
+            <div class="moon-eye moon-eye--right"></div>
+            <div class="moon-smile"></div>
+            <div class="moon-blush moon-blush--left"></div>
+            <div class="moon-blush moon-blush--right"></div>
+          </div>
+        </div>
+        <span class="footer__brand-name">MeritMoon</span>
+        <p class="footer__tagline">Discipline. Clarity. Liberation.</p>
+        <p class="footer__dhamma">Pāli: <em>Yathā vāri vahanti...</em><br/><small>As water flows unceasingly, may merit flow to all beings.</small></p>
+      </div>
+      <div class="footer__links">
+        <div class="footer__col">
+          <h4>Practice</h4>
+          <a href="#">Courses</a>
+          <a href="#">Streak System</a>
+          <a href="#">Teachers</a>
+          <a href="#">Lineages</a>
+        </div>
+        <div class="footer__col">
+          <h4>Merit</h4>
+          <a href="#">Pricing</a>
+          <a href="#">Dana Program</a>
+          <a href="#">Monasteries</a>
+          <a href="#">Dana Certificates</a>
+        </div>
+        <div class="footer__col">
+          <h4>Community</h4>
+          <a href="#">Discord Sangha</a>
+          <a href="#">Retreat Directory</a>
+          <a href="#">Forum</a>
+          <a href="#">Teacher Q&amp;A</a>
+        </div>
+        <div class="footer__col">
+          <h4>Company</h4>
+          <a href="#">About Us</a>
+          <a href="#">Blog</a>
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p>© 2025 MeritMoon. All merits dedicated to all sentient beings.</p>
+      <div class="footer__stores">
+        <a href="#">App Store</a>
+        <a href="#">Google Play</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
