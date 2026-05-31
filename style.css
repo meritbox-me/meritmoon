@@ -1874,137 +1874,177 @@ strong {
   align-items: center;
 }
 
-/* Forest scene */
-.about__scene {
+/* About visual — moon + SVG meditator (from main) */
+.moon-face {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+}
+
+.moon-eye {
+  position: absolute;
+  width: 16%;
+  height: 16%;
+  border-radius: 50%;
+  background: #0F1F0F;
+  top: 36%;
+}
+
+.moon-eye--left {
+  left: 28%;
+}
+
+.moon-eye--right {
+  right: 28%;
+}
+
+.moon-smile {
+  position: absolute;
+  width: 44%;
+  height: 22%;
+  bottom: 24%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 2.5px solid #0F1F0F;
+  border-top: none;
+  border-radius: 0 0 50px 50px;
+}
+
+.moon-blush {
+  position: absolute;
+  width: 20%;
+  height: 10%;
+  border-radius: 50%;
+  background: rgba(194, 75, 90, 0.35);
+  top: 52%;
+  filter: blur(2px);
+}
+
+.moon-blush--left {
+  left: 10%;
+}
+
+.moon-blush--right {
+  right: 10%;
+}
+
+.about__visual {
   position: relative;
 }
 
-.about__forest-scene {
+.about__moon-scene {
   position: relative;
-  min-height: 400px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-}
-
-.atree {
-  position: absolute;
-  bottom: 0;
-  background: var(--bg-mid);
-  border-radius: 4px 4px 0 0;
-}
-
-.at1 {
-  width: 30px;
-  height: 260px;
-  left: 15%;
-  background: linear-gradient(to top, #030E07, #040F08);
-  border-radius: 6px 6px 0 0;
-}
-
-.at2 {
-  width: 40px;
-  height: 320px;
-  left: 42%;
-  background: linear-gradient(to top, #020A05, #030D07);
-  border-radius: 8px 8px 0 0;
-}
-
-.at3 {
-  width: 26px;
-  height: 220px;
-  right: 18%;
-  background: linear-gradient(to top, #030E07, #040F08);
-  border-radius: 6px 6px 0 0;
-}
-
-/* Tree crowns */
-.at1::before {
-  content: '';
-  position: absolute;
-  top: -60px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #071E0D 40%, transparent 70%);
-}
-
-.at2::before {
-  content: '';
-  position: absolute;
-  top: -80px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 110px;
-  height: 110px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #051408 40%, transparent 70%);
-}
-
-.at3::before {
-  content: '';
-  position: absolute;
-  top: -55px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #071E0D 40%, transparent 70%);
-}
-
-.about__moon-glow-pool {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 200px;
-  height: 80px;
-  background: radial-gradient(ellipse at center bottom,
-      rgba(200, 216, 192, 0.15) 0%,
-      rgba(46, 139, 87, 0.08) 40%,
-      transparent 70%);
-  filter: blur(12px);
-}
-
-.about__meditator-figure {
-  position: relative;
-  z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0;
-  margin-bottom: 4px;
+  min-height: 380px;
+  justify-content: center;
 }
 
-.med-head {
+.about__big-moon {
   position: relative;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 32%,
+      var(--silver-bright) 0%,
+      var(--silver) 35%,
+      #8AA884 65%,
+      #5A7055 100%);
+  box-shadow: var(--glow-silver), 0 0 80px rgba(200, 216, 192, 0.15);
+  animation: moon-float 6s ease-in-out infinite;
+  margin: 0 auto;
+  margin-bottom: -20px;
   z-index: 2;
 }
 
-.med-body {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 40% 35%,
-      rgba(200, 216, 192, 0.18) 0%,
-      rgba(46, 139, 87, 0.12) 50%,
-      rgba(30, 82, 53, 0.08) 100%);
-  margin-top: -8px;
-  box-shadow: 0 0 20px rgba(200, 216, 192, 0.08);
+.about-face {
+  transform: translate(-50%, -50%) scale(0.75);
 }
 
-.about__ground-shimmer {
+/* Peaceful meditative closed eyes — about moon only */
+.about-face .moon-eye {
+  width: 22%;
+  height: 12%;
+  top: 37%;
+  background: transparent;
+  border-radius: 0;
+}
+
+.about-face .moon-eye::before {
+  content: '';
   position: absolute;
-  bottom: 0;
+  inset: 0;
+  border: 2.5px solid transparent;
+  border-top-color: #0F1F0F;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+.about-face .moon-eye--left::before {
+  transform: rotate(-4deg);
+}
+
+.about-face .moon-eye--right::before {
+  transform: rotate(4deg);
+}
+
+.about-face .moon-smile {
+  width: 36%;
+  height: 16%;
+  bottom: 27%;
+  border-width: 2px;
+  opacity: 0.9;
+}
+
+.about__moon-ring {
+  position: absolute;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
-  width: 180px;
-  height: 30px;
-  background: radial-gradient(ellipse, rgba(200, 216, 192, 0.1) 0%, transparent 70%);
-  filter: blur(6px);
+  border-radius: 50%;
+  border: 1px solid;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.ar1 {
+  width: 130%;
+  height: 130%;
+  border-color: rgba(200, 216, 192, 0.15);
+  animation: ring-breathe 4s ease-in-out infinite;
+}
+
+.ar2 {
+  width: 165%;
+  height: 165%;
+  border-color: rgba(46, 139, 87, 0.08);
+  animation: ring-breathe 4s ease-in-out infinite 1s;
+}
+
+.about__meditator {
+  position: relative;
+  z-index: 1;
+}
+
+.about__meditator svg {
+  display: block;
+  height: auto;
+  filter: drop-shadow(0 8px 24px rgba(2, 10, 5, 0.45));
+}
+
+.about__ground-glow {
+  width: 240px;
+  height: 40px;
+  margin: -10px auto 0;
+  background: radial-gradient(ellipse at center,
+      rgba(46, 139, 87, 0.2) 0%,
+      rgba(200, 216, 192, 0.1) 40%,
+      transparent 70%);
+  filter: blur(10px);
 }
 
 .about__words p {

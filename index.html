@@ -399,29 +399,40 @@
   <!-- ══════════════════════════ ABOUT ════════════════════════════════════ -->
   <section class="about" id="about">
     <div class="container about__grid">
-      <div class="about__scene">
-        <div class="about__forest-scene">
-          <!-- Tree silhouettes drawn in CSS -->
-          <div class="atree at1"></div>
-          <div class="atree at2"></div>
-          <div class="atree at3"></div>
-          <div class="about__moon-glow-pool"></div>
-          <div class="about__meditator-figure">
-            <div class="med-body"></div>
-            <div class="med-head">
-              <div class="moon-mascot moon-mascot--about">
-                <div class="mm-face">
-                  <div class="mm-eye mm-eye--l"></div>
-                  <div class="mm-eye mm-eye--r"></div>
-                  <div class="mm-smile"></div>
-                  <div class="mm-blush mm-blush--l"></div>
-                  <div class="mm-blush mm-blush--r"></div>
-                </div>
-                <div class="mm-halo"></div>
-              </div>
+      <div class="about__visual">
+        <div class="about__moon-scene">
+          <div class="about__big-moon">
+            <div class="moon-face about-face">
+              <div class="moon-eye moon-eye--left"></div>
+              <div class="moon-eye moon-eye--right"></div>
+              <div class="moon-smile"></div>
+              <div class="moon-blush moon-blush--left"></div>
+              <div class="moon-blush moon-blush--right"></div>
             </div>
+            <div class="about__moon-ring ar1"></div>
+            <div class="about__moon-ring ar2"></div>
           </div>
-          <div class="about__ground-shimmer"></div>
+          <div class="about__meditator">
+            <svg viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg" width="160" aria-hidden="true">
+              <ellipse cx="60" cy="92" rx="40" ry="6" fill="url(#about-sg)" opacity="0.3"/>
+              <circle cx="60" cy="22" r="10" fill="url(#about-sg2)"/>
+              <path d="M50 32 Q60 28 70 32 L75 52 Q60 58 45 52 Z" fill="url(#about-sg2)"/>
+              <path d="M45 52 Q35 58 28 72 Q36 72 45 66 Z" fill="url(#about-sg2)" opacity="0.8"/>
+              <path d="M75 52 Q85 58 92 72 Q84 72 75 66 Z" fill="url(#about-sg2)" opacity="0.8"/>
+              <ellipse cx="60" cy="78" rx="28" ry="12" fill="url(#about-sg2)" opacity="0.9"/>
+              <defs>
+                <linearGradient id="about-sg" x1="0" y1="0" x2="120" y2="0">
+                  <stop offset="0%" stop-color="#C8D8C0"/>
+                  <stop offset="100%" stop-color="#2E8B57"/>
+                </linearGradient>
+                <linearGradient id="about-sg2" x1="0" y1="0" x2="120" y2="100">
+                  <stop offset="0%" stop-color="#8B92A0" stop-opacity="0.7"/>
+                  <stop offset="100%" stop-color="#2A7054" stop-opacity="0.5"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <div class="about__ground-glow"></div>
         </div>
       </div>
 
