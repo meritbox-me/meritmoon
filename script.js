@@ -494,19 +494,20 @@ makeCarousel({
    9. MOON PARALLAX + EYE TRACKING
    ══════════════════════════════════════════════════════════════════════ */
 (function initMoonInteractions() {
-  const heroMoon = document.getElementById('hero-moon');
+  const moonWrap = document.querySelector('.hero-moon-wrap');
 
-  // Parallax on scroll
+  // Parallax on wrap — keeps moon-float animation on .hero-moon
   let ticking = false;
   window.addEventListener('scroll', () => {
-    if (ticking) return;
+    if (ticking || !moonWrap) return;
+    ticking = true;
     requestAnimationFrame(() => {
-      if (heroMoon) {
-        heroMoon.style.transform = `translateY(${window.scrollY * 0.22}px)`;
+      const y = window.scrollY;
+      if (y < window.innerHeight) {
+        moonWrap.style.setProperty('--moon-shift', `${y * 0.06}px`);
       }
       ticking = false;
     });
-    ticking = true;
   }, { passive: true });
 
   // Eye follow

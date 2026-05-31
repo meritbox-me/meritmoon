@@ -7,7 +7,7 @@
   <meta name="description" content="The only meditation app where consistency is the key, discipline is the path, and everything you earn is yours forever." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Cormorant+SC:wght@400;600;700&family=Fauna+One&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Fauna+One&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -74,55 +74,58 @@
     <!-- Ground mist -->
     <div class="ground-mist"></div>
 
-    <!-- The Moon -->
-    <div class="hero-moon-wrap">
-      <div class="hero-moon" id="hero-moon">
-        <div class="hero-moon__surface"></div>
-        <div class="mm-face hero-mm-face">
-          <div class="mm-eye mm-eye--l"></div>
-          <div class="mm-eye mm-eye--r"></div>
-          <div class="mm-smile"></div>
-          <div class="mm-blush mm-blush--l"></div>
-          <div class="mm-blush mm-blush--r"></div>
-          <div class="mm-shine ms1">✦</div>
-          <div class="mm-shine ms2">✧</div>
-          <div class="mm-shine ms3">✦</div>
-          <div class="mm-shine ms4">✧</div>
+    <div class="hero__stage">
+      <div class="hero__content">
+        <p class="hero__kicker reveal-fade" data-d="0">Deep in the forest. Still beneath the moon.</p>
+        <h1 class="hero__headline">
+          <span class="hero__hl-line reveal-up" data-d="100">The Mind You've</span>
+          <span class="hero__hl-line hero__hl-grad reveal-up" data-d="220">Always Deserved</span>
+          <span class="hero__hl-line reveal-up" data-d="340">Grows Here.</span>
+        </h1>
+        <p class="hero__body reveal-fade" data-d="480">
+          A meditation practice so real it changes your life.<br/>
+          Not a subscription trap. A commitment rewarded — with everything, for free.
+        </p>
+        <div class="hero__cta-row reveal-fade" data-d="580">
+          <a href="#download" class="btn btn--forest">
+            <span>Start Free Today</span>
+            <span class="btn__leaf">🌿</span>
+          </a>
+          <a href="#how" class="btn btn--ghost">See How It Works</a>
         </div>
-        <div class="hero-moon__ring r1"></div>
-        <div class="hero-moon__ring r2"></div>
-        <div class="hero-moon__ring r3"></div>
+        <div class="hero__proof reveal-fade" data-d="680">
+          <div class="proof-pill">
+            <span class="proof-dot"></span>
+            <span>47,000+ meditators sitting right now</span>
+          </div>
+          <div class="proof-pill">
+            <span class="proof-dot proof-dot--gold"></span>
+            <span>Donation flowing to 18 real teachers</span>
+          </div>
+        </div>
       </div>
-      <!-- Moon reflection in forest floor -->
-      <div class="moon-pool-reflection"></div>
-    </div>
 
-    <div class="hero__content">
-      <p class="hero__kicker reveal-fade" data-d="0">Deep in the forest. Still beneath the moon.</p>
-      <h1 class="hero__headline">
-        <span class="hero__hl-line reveal-up" data-d="100">The Mind You've</span>
-        <span class="hero__hl-line hero__hl-grad reveal-up" data-d="220">Always Deserved</span>
-        <span class="hero__hl-line reveal-up" data-d="340">Grows Here.</span>
-      </h1>
-      <p class="hero__body reveal-fade" data-d="480">
-        A meditation practice so real it changes your life.<br/>
-        Not a subscription trap. A commitment rewarded — with everything, for free.
-      </p>
-      <div class="hero__cta-row reveal-fade" data-d="580">
-        <a href="#download" class="btn btn--forest">
-          <span>Start Free Today</span>
-          <span class="btn__leaf">🌿</span>
-        </a>
-        <a href="#how" class="btn btn--ghost">See How It Works</a>
-      </div>
-      <div class="hero__proof reveal-fade" data-d="680">
-        <div class="proof-pill">
-          <span class="proof-dot"></span>
-          <span>47,000+ meditators sitting right now</span>
-        </div>
-        <div class="proof-pill">
-          <span class="proof-dot proof-dot--gold"></span>
-          <span>Donation flowing to 18 real teachers</span>
+      <div class="hero__visual" aria-hidden="true">
+        <div class="hero-moon-wrap">
+          <div class="hero-moon-beam"></div>
+          <div class="hero-moon" id="hero-moon">
+            <div class="hero-moon__surface"></div>
+            <div class="mm-face hero-mm-face">
+              <div class="mm-eye mm-eye--l"></div>
+              <div class="mm-eye mm-eye--r"></div>
+              <div class="mm-smile"></div>
+              <div class="mm-blush mm-blush--l"></div>
+              <div class="mm-blush mm-blush--r"></div>
+              <div class="mm-shine ms1">✦</div>
+              <div class="mm-shine ms2">✧</div>
+              <div class="mm-shine ms3">✦</div>
+              <div class="mm-shine ms4">✧</div>
+            </div>
+            <div class="hero-moon__ring r1"></div>
+            <div class="hero-moon__ring r2"></div>
+            <div class="hero-moon__ring r3"></div>
+          </div>
+          <div class="moon-pool-reflection"></div>
         </div>
       </div>
     </div>

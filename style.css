@@ -3,6 +3,22 @@
    Theme: Deep ancient forest · Serene moonlight · Silver-on-emerald
    ═══════════════════════════════════════════════════════════════════════ */
 
+@font-face {
+  font-family: 'Moonjelly';
+  src: url('moonjelly/Moonjelly-Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Moonjelly';
+  src: url('moonjelly/Moonjelly-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ── COLOR PALETTE (edit these to test) ─────────────────────────────────── */
 :root {
   /* Core four */
@@ -67,7 +83,7 @@
   --border-emerald: rgba(46, 139, 87, 0.3);
 
   /* Typography */
-  --font-display: 'Cormorant SC', serif;
+  --font-display: 'Moonjelly', 'Cormorant SC', serif;
   --font-serif: 'Cormorant Garamond', Georgia, serif;
   --font-body: 'Fauna One', Georgia, serif;
 
@@ -269,8 +285,17 @@ strong {
 }
 
 @keyframes cursor-halo {
-  0%, 100% { opacity: 0.35; transform: translate(-50%, -50%) scale(1); }
-  50% { opacity: 0.12; transform: translate(-50%, -50%) scale(1.12); }
+
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  50% {
+    opacity: 0.12;
+    transform: translate(-50%, -50%) scale(1.12);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -737,12 +762,26 @@ strong {
 .hero {
   position: relative;
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   justify-content: center;
-  padding: 140px 48px 100px;
+  padding: 108px var(--pad-x) 72px;
   overflow: hidden;
   z-index: 2;
+}
+
+.hero__stage {
+  position: relative;
+  z-index: 4;
+  width: 100%;
+  max-width: var(--container);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  align-items: center;
 }
 
 /* Forest silhouette layers — CSS-drawn */
@@ -892,19 +931,42 @@ strong {
   pointer-events: none;
 }
 
-/* Hero moon */
+/* Hero moon — in-flow beside copy on desktop */
+.hero__visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  min-height: 280px;
+}
+
 .hero-moon-wrap {
+  position: relative;
+  --moon-shift: 0px;
+  transform: translateY(var(--moon-shift));
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero-moon-beam {
+  display: none;
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -55%);
+  top: 18%;
+  right: 68%;
+  width: min(240px, 36vw);
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(200, 216, 192, 0.35), rgba(46, 139, 87, 0.15));
+  transform: rotate(-10deg);
+  opacity: 0.65;
   pointer-events: none;
 }
 
 .hero-moon {
   position: relative;
-  width: 340px;
-  height: 340px;
+  width: clamp(240px, 34vw, 360px);
+  height: clamp(240px, 34vw, 360px);
   border-radius: 50%;
   background: radial-gradient(circle at 36% 30%,
       var(--silver-bright) 0%,
@@ -913,9 +975,9 @@ strong {
       #5A7055 80%,
       #3A5040 100%);
   box-shadow:
-    var(--glow-silver),
-    0 0 100px rgba(200, 216, 192, 0.15),
-    0 0 200px rgba(200, 216, 192, 0.06),
+    0 0 36px rgba(232, 240, 228, 0.4),
+    0 0 80px rgba(200, 216, 192, 0.22),
+    0 0 140px rgba(200, 216, 192, 0.1),
     inset -16px -12px 32px rgba(0, 0, 0, 0.35);
   animation: moon-rise 1.2s var(--ease-forest) forwards, moon-float 8s ease-in-out 1.2s infinite;
   opacity: 0;
@@ -1041,15 +1103,17 @@ strong {
 /* Hero content */
 .hero__content {
   position: relative;
-  z-index: 4;
+  z-index: 1;
   text-align: center;
-  max-width: 700px;
+  max-width: 36rem;
+  margin: 0 auto;
 }
 
 .hero__kicker {
   font-family: var(--font-display);
-  font-size: 0.72rem;
-  letter-spacing: 0.3em;
+  font-weight: 300;
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--emerald-bright);
   margin-bottom: 28px;
@@ -1059,12 +1123,13 @@ strong {
 
 .hero__headline {
   font-family: var(--font-serif);
-  font-size: clamp(3.2rem, 8vw, 6.4rem);
+  font-size: clamp(2.5rem, 6.5vw, 4.6rem);
   font-weight: 600;
-  line-height: 1.0;
-  margin-bottom: 28px;
+  line-height: 1.08;
+  margin-bottom: 24px;
   display: flex;
   flex-direction: column;
+  gap: 0.05em;
 }
 
 .hero__hl-line {
@@ -1072,6 +1137,7 @@ strong {
   opacity: 0;
   transform: translateY(28px);
   transition: opacity 0.8s var(--ease-forest), transform 0.8s var(--ease-forest);
+  color: var(--text-light);
 }
 
 .hero__hl-line.vis {
@@ -1084,7 +1150,54 @@ strong {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  filter: drop-shadow(0 0 28px rgba(46, 139, 87, 0.5));
+  filter: drop-shadow(0 0 20px rgba(46, 139, 87, 0.45));
+}
+
+@media (min-width: 900px) {
+  .hero__stage {
+    grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+    gap: 24px 56px;
+  }
+
+  .hero__content {
+    text-align: left;
+    margin: 0;
+    max-width: none;
+  }
+
+  .hero__cta-row,
+  .hero__proof {
+    justify-content: flex-start;
+  }
+
+  .hero__visual {
+    justify-content: flex-end;
+    min-height: 360px;
+  }
+
+  .hero-moon-beam {
+    display: block;
+  }
+
+  /* Aim ambient beams toward the moon column */
+  .mb1 {
+    left: 52%;
+  }
+
+  .mb2 {
+    left: 68%;
+    width: 100px;
+  }
+
+  .mb3 {
+    left: 82%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .hero__headline {
+    font-size: clamp(2.8rem, 4.2vw, 5rem);
+  }
 }
 
 .hero__body {
@@ -2849,13 +2962,21 @@ strong {
     display: flex;
   }
 
+  .hero {
+    padding: 100px var(--pad-x) 64px;
+  }
+
   .hero__headline {
-    font-size: clamp(2.8rem, 10vw, 4rem);
+    font-size: clamp(2.2rem, 9vw, 3.2rem);
+  }
+
+  .hero__visual {
+    min-height: 240px;
   }
 
   .hero-moon {
-    width: 220px;
-    height: 220px;
+    width: min(260px, 78vw);
+    height: min(260px, 78vw);
   }
 
   .carousel-track {
