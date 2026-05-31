@@ -276,9 +276,11 @@ const C = {
    3. CUSTOM CURSOR
    ══════════════════════════════════════════════════════════════════════ */
 (function initCursor() {
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
   const el = document.createElement('div');
   el.id = 'cursor';
-  el.textContent = '☽';
+  el.setAttribute('aria-hidden', 'true');
   document.body.appendChild(el);
   document.body.style.cursor = 'none';
 
