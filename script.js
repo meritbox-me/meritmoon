@@ -1,129 +1,151 @@
 /* ═══════════════════════════════════════════════════════════════════════
-   MERITMOON — SCRIPT.JS
-   Starfield, carousels, scroll animations, counters, cursor, nav
+   MERITMOON v2 — SCRIPT.JS
+   Forest canvas · Fireflies · Carousels · Scroll reveals · Counters
    ═══════════════════════════════════════════════════════════════════════ */
 
 'use strict';
 
-/* ─── DESIGN TOKEN MIRRORS (match CSS vars for canvas/JS use) ──────────── */
-const COLORS = {
-  silver: '#C0C8D8',
-  emerald: '#3DBA7E',
-  ruby: '#C9445A',
-  gold: '#E8C97E',
-  silverDim: '#7A8494',
-  emeraldDim: '#1E6B49',
-  skyDeep: '#03050D',
-  skyMid: '#070C1A',
+/* ── COLOR MIRRORS (matches CSS vars — edit in CSS, mirror here for canvas) */
+const C = {
+  silver: '#C8D8C0',
+  emerald: '#2E8B57',
+  ruby: '#C24B5A',
+  gold: '#D4A853',
+  silverBright: '#E8F0E0',
+  emeraldBright: '#4DBF82',
+  goldBright: '#F0C870',
+  silverDim: '#7A8C74',
+  emeraldDim: '#1A5235',
+  bgDeep: '#020A05',
 };
 
-/* ─── STARFIELD CANVAS ──────────────────────────────────────────────────── */
-(function initStarfield() {
-  const canvas = document.getElementById('starfield');
+/* ══════════════════════════════════════════════════════════════════════
+   1. FOREST + STARS CANVAS
+   Layered: deep night sky gradient → stars → faint star clusters →
+   distant treeline silhouette painted on canvas bottom
+   ══════════════════════════════════════════════════════════════════════ */
+(function initForestCanvas() {
+  const canvas = document.getElementById('forest-canvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
+  let W, H, stars = [], shooters = [], driftClouds = [];
+  let frame = 0, raf;
 
-  let W, H, stars = [], shootingStars = [];
-  let animId;
+  function rand(a, b) { return Math.random() * (b - a) + a; }
+  function hex2rgb(hex) {
+    return {
+      r: parseInt(hex.slice(1, 3), 16),
+      g: parseInt(hex.slice(3, 5), 16),
+      b: parseInt(hex.slice(5, 7), 16),
+    };
+  }
+  function rgba(hex, a) {
+    const { r, g, b } = hex2rgb(hex);
+    return `rgba(${r},${g},${b},${a})`;
+  }
 
   function resize() {
     W = canvas.width = window.innerWidth;
     H = canvas.height = window.innerHeight;
   }
 
-  function rand(min, max) { return Math.random() * (max - min) + min; }
-
-  // Star types: tiny dim (far), medium (mid), bright (close)
-  function createStar() {
-    const tier = Math.random();
-    let size, opacity, twinkleSpeed;
-    if (tier < 0.65) {
-      size = rand(0.3, 0.7); opacity = rand(0.1, 0.3); twinkleSpeed = rand(0.003, 0.006);
-    } else if (tier < 0.9) {
-      size = rand(0.7, 1.2); opacity = rand(0.25, 0.55); twinkleSpeed = rand(0.004, 0.009);
-    } else {
-      size = rand(1.2, 2.0); opacity = rand(0.5, 0.9); twinkleSpeed = rand(0.006, 0.012);
-    }
-    return {
-      x: rand(0, W), y: rand(0, H),
-      size,
-      baseOpacity: opacity,
-      opacity,
-      twinkleSpeed,
-      phase: rand(0, Math.PI * 2),
-      // Very rarely, a star has a color tint
-      color: Math.random() < 0.08
-        ? (Math.random() < 0.5 ? COLORS.silver : COLORS.emeraldDim)
-        : '#FFFFFF',
-    };
-  }
-
-  function initStars() {
+  /* Stars */
+  function buildStars() {
     stars = [];
-    const count = Math.floor((W * H) / 3200);
-    for (let i = 0; i < count; i++) stars.push(createStar());
+    const n = Math.floor(W * H / 2800);
+    for (let i = 0; i < n; i++) {
+      const t = Math.random();
+      let sz, base, speed;
+      if (t < 0.6) { sz = rand(0.25, 0.65); base = rand(0.08, 0.25); speed = rand(0.002, 0.005); }
+      else if (t < 0.88) { sz = rand(0.65, 1.1); base = rand(0.2, 0.5); speed = rand(0.004, 0.008); }
+      else { sz = rand(1.1, 1.8); base = rand(0.45, 0.85); speed = rand(0.007, 0.013); }
+      stars.push({
+        x: rand(0, W), y: rand(0, H * 0.72),
+        sz, base, speed,
+        phase: rand(0, Math.PI * 2),
+        tint: Math.random() < 0.09
+          ? (Math.random() < 0.6 ? C.silver : C.emeraldDim)
+          : '#FFFFFF',
+      });
+    }
   }
 
-  function createShootingStar() {
-    const angle = rand(-0.4, 0.1); // mostly going down-right
-    const speed = rand(8, 18);
-    return {
-      x: rand(W * 0.1, W * 0.9),
-      y: rand(0, H * 0.4),
-      vx: Math.cos(angle) * speed,
-      vy: Math.sin(angle) * speed,
-      length: rand(60, 140),
-      opacity: 1,
-      decay: rand(0.012, 0.022),
-    };
+  /* Wispy drift clouds (very faint nebula smears) */
+  function buildClouds() {
+    driftClouds = [];
+    for (let i = 0; i < 4; i++) {
+      driftClouds.push({
+        x: rand(W * 0.05, W * 0.95),
+        y: rand(H * 0.05, H * 0.55),
+        rx: rand(W * 0.12, W * 0.22),
+        ry: rand(H * 0.06, H * 0.14),
+        angle: rand(-0.3, 0.3),
+        color: i % 2 === 0 ? C.emerald : C.silver,
+        alpha: rand(0.012, 0.026),
+      });
+    }
   }
 
-  function drawBackground() {
-    // Deep night sky gradient
-    const grad = ctx.createRadialGradient(W * 0.5, H * 0.3, 0, W * 0.5, H * 0.5, Math.max(W, H) * 0.8);
-    grad.addColorStop(0, 'rgba(10, 16, 35, 0.95)');
-    grad.addColorStop(0.4, 'rgba(5, 9, 20, 0.98)');
-    grad.addColorStop(1, 'rgba(3, 5, 13, 1)');
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, W, H);
-  }
-
-  function drawNebula() {
-    // Subtle nebula wisps
-    const nebulas = [
-      { x: W * 0.2, y: H * 0.25, r: W * 0.18, color: 'rgba(61,186,126,0.025)' },
-      { x: W * 0.75, y: H * 0.15, r: W * 0.14, color: 'rgba(192,200,216,0.02)' },
-      { x: W * 0.5, y: H * 0.6, r: W * 0.22, color: 'rgba(201,68,90,0.018)' },
-    ];
-    nebulas.forEach(n => {
-      const g = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r);
-      g.addColorStop(0, n.color);
-      g.addColorStop(0.5, n.color.replace(/[\d.]+\)$/, '0.01)'));
-      g.addColorStop(1, 'rgba(0,0,0,0)');
-      ctx.fillStyle = g;
-      ctx.beginPath();
-      ctx.ellipse(n.x, n.y, n.r, n.r * 0.5, 0.4, 0, Math.PI * 2);
-      ctx.fill();
+  /* Shooting stars */
+  function spawnShooter() {
+    const angle = rand(-0.35, 0.12);
+    const spd = rand(9, 20);
+    shooters.push({
+      x: rand(W * 0.05, W * 0.85),
+      y: rand(0, H * 0.38),
+      vx: Math.cos(angle) * spd,
+      vy: Math.sin(angle) * spd,
+      len: rand(55, 130),
+      op: 1,
+      decay: rand(0.013, 0.024),
     });
   }
 
-  let frame = 0;
+  /* Paint sky gradient */
+  function drawSky() {
+    const g = ctx.createRadialGradient(W * 0.5, H * 0.28, 0, W * 0.5, H * 0.5, Math.max(W, H) * 0.9);
+    g.addColorStop(0, 'rgba(8,20,12,0.97)');
+    g.addColorStop(0.3, 'rgba(5,14,8,0.99)');
+    g.addColorStop(0.7, 'rgba(3,9,5,1)');
+    g.addColorStop(1, 'rgba(2,6,3,1)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  /* Paint nebula smears */
+  function drawClouds() {
+    driftClouds.forEach(c => {
+      ctx.save();
+      ctx.translate(c.x, c.y);
+      ctx.rotate(c.angle);
+      const g = ctx.createRadialGradient(0, 0, 0, 0, 0, Math.max(c.rx, c.ry));
+      g.addColorStop(0, rgba(c.color, c.alpha));
+      g.addColorStop(0.5, rgba(c.color, c.alpha * 0.4));
+      g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.ellipse(0, 0, c.rx, c.ry, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    });
+  }
+
+  /* Paint stars */
   function drawStars() {
     frame++;
     stars.forEach(s => {
-      s.opacity = s.baseOpacity + Math.sin(frame * s.twinkleSpeed + s.phase) * (s.baseOpacity * 0.5);
+      const op = s.base + Math.sin(frame * s.speed + s.phase) * s.base * 0.5;
       ctx.beginPath();
-      ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
-      ctx.fillStyle = s.color === '#FFFFFF'
-        ? `rgba(255,255,255,${s.opacity})`
-        : hexToRgba(s.color, s.opacity);
+      ctx.arc(s.x, s.y, s.sz, 0, Math.PI * 2);
+      ctx.fillStyle = s.tint === '#FFFFFF'
+        ? `rgba(255,255,255,${op})`
+        : rgba(s.tint, op);
       ctx.fill();
 
-      // Cross sparkle for brighter stars
-      if (s.size > 1.4 && s.opacity > 0.6) {
-        const arm = s.size * 3;
-        ctx.strokeStyle = `rgba(255,255,255,${s.opacity * 0.3})`;
-        ctx.lineWidth = 0.5;
+      if (s.sz > 1.3 && op > 0.55) {
+        const arm = s.sz * 2.8;
+        ctx.strokeStyle = `rgba(255,255,255,${op * 0.28})`;
+        ctx.lineWidth = 0.4;
         ctx.beginPath();
         ctx.moveTo(s.x - arm, s.y); ctx.lineTo(s.x + arm, s.y);
         ctx.moveTo(s.x, s.y - arm); ctx.lineTo(s.x, s.y + arm);
@@ -132,539 +154,498 @@ const COLORS = {
     });
   }
 
-  function drawShootingStars() {
-    shootingStars = shootingStars.filter(s => s.opacity > 0);
-    shootingStars.forEach(s => {
-      const tailX = s.x - s.vx * (s.length / 15);
-      const tailY = s.y - s.vy * (s.length / 15);
-      const grad = ctx.createLinearGradient(tailX, tailY, s.x, s.y);
-      grad.addColorStop(0, 'rgba(255,255,255,0)');
-      grad.addColorStop(1, `rgba(232,240,255,${s.opacity})`);
+  /* Paint shooting stars */
+  function drawShooters() {
+    shooters = shooters.filter(s => s.op > 0);
+    shooters.forEach(s => {
+      const tx = s.x - s.vx * (s.len / 14);
+      const ty = s.y - s.vy * (s.len / 14);
+      const g = ctx.createLinearGradient(tx, ty, s.x, s.y);
+      g.addColorStop(0, 'rgba(255,255,255,0)');
+      g.addColorStop(1, `rgba(232,240,228,${s.op})`);
       ctx.beginPath();
-      ctx.moveTo(tailX, tailY);
+      ctx.moveTo(tx, ty);
       ctx.lineTo(s.x, s.y);
-      ctx.strokeStyle = grad;
-      ctx.lineWidth = s.opacity * 1.5;
+      ctx.strokeStyle = g;
+      ctx.lineWidth = s.op * 1.4;
       ctx.stroke();
-
-      s.x += s.vx; s.y += s.vy;
-      s.opacity -= s.decay;
+      s.x += s.vx; s.y += s.vy; s.op -= s.decay;
     });
-
-    // Spawn occasional shooting star
-    if (frame % 280 === 0 && Math.random() < 0.6) {
-      shootingStars.push(createShootingStar());
-    }
+    if (frame % 300 === 0 && Math.random() < 0.55) spawnShooter();
   }
 
-  function hexToRgba(hex, alpha) {
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-    return `rgba(${r},${g},${b},${alpha})`;
+  /* Paint far treeline on canvas — reinforces CSS forest layers */
+  function drawTreeline() {
+    ctx.save();
+    // Moonlit horizon glow
+    const hg = ctx.createLinearGradient(0, H * 0.72, 0, H);
+    hg.addColorStop(0, 'rgba(200,216,192,0.04)');
+    hg.addColorStop(0.3, 'rgba(46,139,87,0.02)');
+    hg.addColorStop(1, 'rgba(2,10,5,0)');
+    ctx.fillStyle = hg;
+    ctx.fillRect(0, H * 0.72, W, H * 0.28);
+
+    // Very faint canopy shimmer line
+    ctx.strokeStyle = 'rgba(200,216,192,0.04)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    // Jagged silhouette top
+    ctx.moveTo(0, H * 0.78);
+    let px = 0;
+    while (px < W) {
+      const step = rand(8, 20);
+      const ht = rand(H * 0.72, H * 0.82);
+      ctx.lineTo(px, ht);
+      px += step;
+    }
+    ctx.lineTo(W, H);
+    ctx.lineTo(0, H);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(2,8,4,0.3)';
+    ctx.fill();
+    ctx.restore();
   }
 
   function animate() {
     ctx.clearRect(0, 0, W, H);
-    drawBackground();
-    drawNebula();
+    drawSky();
+    drawClouds();
     drawStars();
-    drawShootingStars();
-    animId = requestAnimationFrame(animate);
+    drawShooters();
+    drawTreeline();
+    raf = requestAnimationFrame(animate);
   }
 
   resize();
-  initStars();
+  buildStars();
+  buildClouds();
   animate();
 
-  let resizeTimer;
+  let rt;
   window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
-      cancelAnimationFrame(animId);
-      resize();
-      initStars();
-      animate();
+    clearTimeout(rt);
+    rt = setTimeout(() => {
+      cancelAnimationFrame(raf);
+      resize(); buildStars(); buildClouds(); animate();
     }, 200);
   });
 })();
 
-/* ─── CUSTOM CURSOR ──────────────────────────────────────────────────────── */
-(function initCursor() {
-  let cx = -100, cy = -100;
-  let tx = -100, ty = -100;
 
-  document.addEventListener('mousemove', e => {
-    tx = e.clientX; ty = e.clientY;
-  });
+/* ══════════════════════════════════════════════════════════════════════
+   2. FIREFLIES
+   ══════════════════════════════════════════════════════════════════════ */
+(function initFireflies() {
+  const container = document.getElementById('fireflies');
+  if (!container) return;
+  const count = window.innerWidth < 768 ? 10 : 22;
 
-  function lerp(a, b, t) { return a + (b - a) * t; }
-
-  function updateCursor() {
-    cx = lerp(cx, tx, 0.18);
-    cy = lerp(cy, ty, 0.18);
-    document.body.style.setProperty('--cx', cx + 'px');
-    document.body.style.setProperty('--cy', cy + 'px');
-
-    // Move the ::after pseudo via direct DOM — use a small overlay div instead
-    if (cursorEl) {
-      cursorEl.style.left = cx + 'px';
-      cursorEl.style.top = cy + 'px';
+  for (let i = 0; i < count; i++) {
+    const ff = document.createElement('div');
+    ff.className = 'firefly';
+    const x = Math.random() * 100;
+    const y = 30 + Math.random() * 65;
+    const dur = 6 + Math.random() * 12;
+    const del = Math.random() * 10;
+    const dx = (Math.random() - 0.5) * 80;
+    const dy = -(20 + Math.random() * 80);
+    const dx2 = (Math.random() - 0.5) * 60;
+    const dy2 = -(40 + Math.random() * 100);
+    // Occasionally emerald-tinted firefly
+    if (Math.random() < 0.25) {
+      ff.style.background = '#4DBF82';
+      ff.style.boxShadow = '0 0 6px 2px #4DBF82';
     }
-    requestAnimationFrame(updateCursor);
+    ff.style.cssText += `
+      left: ${x}%; top: ${y}%;
+      --ff-dur: ${dur}s;
+      --ff-delay: ${del}s;
+      --ff-dx: ${dx}px;
+      --ff-dy: ${dy}px;
+      --ff-dx2: ${dx2}px;
+      --ff-dy2: ${dy2}px;
+      animation-delay: ${del}s;
+      animation-duration: ${dur}s;
+    `;
+    container.appendChild(ff);
   }
-
-  // Create real cursor element
-  const cursorEl = document.createElement('div');
-  cursorEl.style.cssText = `
-    position: fixed; top: 0; left: 0; width: 28px; height: 28px;
-    pointer-events: none; z-index: 99999;
-    transform: translate(-50%,-50%);
-    font-size: 18px; line-height: 28px; text-align: center;
-    color: ${COLORS.silver};
-    text-shadow: 0 0 12px ${COLORS.silver};
-    transition: transform 0.2s, color 0.2s;
-    user-select: none;
-  `;
-  cursorEl.textContent = '☽';
-  document.body.appendChild(cursorEl);
-
-  // Remove default ::after cursor handling — we use the div
-  document.body.style.cursor = 'none';
-  document.querySelectorAll('a, button, [role="button"]').forEach(el => {
-    el.style.cursor = 'none';
-    el.addEventListener('mouseenter', () => {
-      cursorEl.style.transform = 'translate(-50%,-50%) scale(1.5) rotate(-20deg)';
-      cursorEl.style.color = COLORS.gold;
-      cursorEl.style.textShadow = `0 0 16px ${COLORS.gold}`;
-    });
-    el.addEventListener('mouseleave', () => {
-      cursorEl.style.transform = 'translate(-50%,-50%) scale(1)';
-      cursorEl.style.color = COLORS.silver;
-      cursorEl.style.textShadow = `0 0 12px ${COLORS.silver}`;
-    });
-  });
-
-  requestAnimationFrame(updateCursor);
 })();
 
-/* ─── NAVIGATION ──────────────────────────────────────────────────────────── */
+
+/* ══════════════════════════════════════════════════════════════════════
+   3. CUSTOM CURSOR
+   ══════════════════════════════════════════════════════════════════════ */
+(function initCursor() {
+  const el = document.createElement('div');
+  el.id = 'cursor';
+  el.textContent = '☽';
+  document.body.appendChild(el);
+  document.body.style.cursor = 'none';
+
+  let cx = -100, cy = -100, tx = -100, ty = -100;
+
+  document.addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; });
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function tick() {
+    cx = lerp(cx, tx, 0.16);
+    cy = lerp(cy, ty, 0.16);
+    el.style.left = cx + 'px';
+    el.style.top = cy + 'px';
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  document.querySelectorAll('a,button,[role="button"]').forEach(node => {
+    node.style.cursor = 'none';
+    node.addEventListener('mouseenter', () => el.classList.add('hover'));
+    node.addEventListener('mouseleave', () => el.classList.remove('hover'));
+  });
+})();
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   4. NAVIGATION
+   ══════════════════════════════════════════════════════════════════════ */
 (function initNav() {
   const nav = document.getElementById('nav');
-  const hamburger = document.getElementById('hamburger');
-  const navLinks = document.getElementById('nav-links');
+  const ham = document.getElementById('hamburger');
+  const links = document.getElementById('nav-links');
 
   window.addEventListener('scroll', () => {
     nav.classList.toggle('scrolled', window.scrollY > 60);
   }, { passive: true });
 
-  hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('open');
-    navLinks.classList.toggle('open');
+  ham.addEventListener('click', () => {
+    ham.classList.toggle('open');
+    links.classList.toggle('open');
   });
 
-  // Close mobile menu on link click
-  navLinks.querySelectorAll('a').forEach(a => {
+  links.querySelectorAll('a').forEach(a => {
     a.addEventListener('click', () => {
-      hamburger.classList.remove('open');
-      navLinks.classList.remove('open');
+      ham.classList.remove('open');
+      links.classList.remove('open');
     });
   });
 })();
 
-/* ─── HERO ENTRY ANIMATION ────────────────────────────────────────────────── */
-(function initHeroAnimation() {
-  const moon = document.getElementById('hero-moon');
-  if (moon) {
-    setTimeout(() => moon.classList.add('visible'), 300);
-  }
 
-  // Stagger the .line-fade elements
-  document.querySelectorAll('.line-fade').forEach(el => {
-    const delay = parseInt(el.dataset.delay || 0);
-    setTimeout(() => {
-      el.classList.add('visible');
-    }, 600 + delay);
+/* ══════════════════════════════════════════════════════════════════════
+   5. HERO ENTRY ANIMATION
+   ══════════════════════════════════════════════════════════════════════ */
+(function initHero() {
+  // Kicker
+  const kicker = document.querySelector('.hero__kicker');
+  if (kicker) setTimeout(() => {
+    kicker.style.opacity = '1';
+    kicker.style.animation = 'fade-up 0.8s var(--ease-forest) forwards';
+  }, 300);
+
+  // Headline lines
+  document.querySelectorAll('.hero__hl-line').forEach(line => {
+    const d = parseInt(line.dataset.d || 0);
+    setTimeout(() => line.classList.add('vis'), 500 + d);
+  });
+
+  // Body + CTA
+  document.querySelectorAll('.reveal-fade[data-d]').forEach(el => {
+    if (!el.closest('.hero')) return;
+    const d = parseInt(el.dataset.d || 0);
+    setTimeout(() => el.classList.add('vis'), 500 + d);
   });
 })();
 
-/* ─── SCROLL REVEAL ──────────────────────────────────────────────────────── */
-(function initScrollReveal() {
-  // Add fade-in to key elements
-  const selectors = [
-    '.section-label', '.section-title', '.section-sub',
-    '.about__content > p', '.about__pillars',
-    '.dana-banner', '.dana-banner__stats',
-    '.footer__brand', '.footer__col',
-    '.souls-quote', '.souls-card',
-    '.pillar', '.download-cta .section-title',
-    '.download-cta .section-sub', '.cta-btns',
-  ];
-  selectors.forEach(sel => {
+
+/* ══════════════════════════════════════════════════════════════════════
+   6. INTERSECTION OBSERVER — scroll reveals + counters
+   ══════════════════════════════════════════════════════════════════════ */
+(function initReveal() {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('vis');
+      obs.unobserve(e.target);
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -36px 0px' });
+
+  // Tag everything that should reveal (excluding hero, which has its own timing)
+  document.querySelectorAll('.reveal-fade, .reveal-card').forEach(el => {
+    if (el.closest('.hero')) return;
+    // Delay based on data-d if present
+    const d = parseInt(el.dataset.d || 0);
+    if (d) el.style.transitionDelay = (d / 1000) + 's';
+    obs.observe(el);
+  });
+
+  // Tag other elements
+  [
+    '.pcard', '.how__step', '.mtile', '.tcard',
+    '.about__words > *', '.about__pillars',
+    '.fcol', '.footer__brand',
+  ].forEach(sel => {
     document.querySelectorAll(sel).forEach((el, i) => {
-      if (!el.classList.contains('fade-in')) {
-        el.classList.add('fade-in');
-        el.style.transitionDelay = (i * 0.07) + 's';
+      if (!el.classList.contains('reveal-fade') && !el.classList.contains('reveal-card')) {
+        el.classList.add('reveal-fade');
+        el.style.transitionDelay = (i * 0.08) + 's';
+        if (!el.closest('.hero')) obs.observe(el);
       }
     });
-  });
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-
-  document.querySelectorAll('.fade-in, .commitment__card').forEach(el => {
-    observer.observe(el);
   });
 })();
 
-/* ─── ANIMATED COUNTERS ───────────────────────────────────────────────────── */
+
+/* ══════════════════════════════════════════════════════════════════════
+   7. ANIMATED COUNTERS
+   ══════════════════════════════════════════════════════════════════════ */
 (function initCounters() {
-  function easeOutQuart(t) { return 1 - Math.pow(1 - t, 4); }
+  function easeOut(t) { return 1 - Math.pow(1 - t, 4); }
 
-  function animateCounter(el, target, duration = 2000) {
+  function animateNum(el, target, dur = 2200) {
     const start = performance.now();
-    const isFloat = String(target).includes('.');
-
-    function step(now) {
-      const elapsed = Math.min((now - start) / duration, 1);
-      const value = Math.floor(easeOutQuart(elapsed) * target);
-      el.textContent = value.toLocaleString();
-      if (elapsed < 1) requestAnimationFrame(step);
-      else el.textContent = isFloat ? target.toFixed(1) : target.toLocaleString();
-    }
-    requestAnimationFrame(step);
+    (function step(now) {
+      const p = Math.min((now - start) / dur, 1);
+      el.textContent = Math.floor(easeOut(p) * target).toLocaleString();
+      if (p < 1) requestAnimationFrame(step);
+      else el.textContent = target.toLocaleString();
+    })(start);
   }
 
-  const counterObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      const el = entry.target;
-      const target = parseInt(el.dataset.target, 10);
-      if (!isNaN(target)) animateCounter(el, target, 2200);
-      counterObserver.unobserve(el);
+  const cObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const t = parseInt(e.target.dataset.target, 10);
+      if (!isNaN(t)) animateNum(e.target, t);
+      cObs.unobserve(e.target);
     });
   }, { threshold: 0.5 });
 
-  document.querySelectorAll('[data-target]').forEach(el => {
-    counterObserver.observe(el);
-  });
+  document.querySelectorAll('[data-target]').forEach(el => cObs.observe(el));
 })();
 
-/* ─── GENERIC CAROUSEL FACTORY ────────────────────────────────────────────── */
-function createCarousel({ trackId, prevId, nextId, dotsId, cardSelector, visibleCount, gap }) {
+
+/* ══════════════════════════════════════════════════════════════════════
+   8. CAROUSEL FACTORY
+   ══════════════════════════════════════════════════════════════════════ */
+function makeCarousel({ trackId, prevId, nextId, dotsId, cardSel, perView, gapPx, autoplay }) {
   const track = document.getElementById(trackId);
   const prev = document.getElementById(prevId);
   const next = document.getElementById(nextId);
   const dotsEl = document.getElementById(dotsId);
   if (!track || !prev || !next || !dotsEl) return;
 
-  const cards = track.querySelectorAll(cardSelector);
+  const cards = [...track.querySelectorAll(cardSel)];
   if (!cards.length) return;
 
-  let current = 0;
-  const total = cards.length;
-  const maxIndex = Math.max(0, total - visibleCount);
+  const maxIdx = Math.max(0, cards.length - perView);
+  let cur = 0;
 
   // Build dots
-  const dotCount = maxIndex + 1;
-  for (let i = 0; i < dotCount; i++) {
-    const dot = document.createElement('div');
-    dot.className = 'dot' + (i === 0 ? ' active' : '');
-    dot.addEventListener('click', () => goTo(i));
-    dotsEl.appendChild(dot);
+  for (let i = 0; i <= maxIdx; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.addEventListener('click', () => go(i));
+    dotsEl.appendChild(d);
   }
 
-  function getCardWidth() {
-    const card = cards[0];
-    const style = window.getComputedStyle(card);
-    return card.offsetWidth + parseInt(style.marginRight || gap);
+  function cardW() {
+    return cards[0].offsetWidth + gapPx;
   }
 
-  function goTo(index) {
-    current = Math.max(0, Math.min(index, maxIndex));
-    const offset = current * (getCardWidth() + gap);
-    track.style.transform = `translateX(-${offset}px)`;
-    dotsEl.querySelectorAll('.dot').forEach((d, i) => {
-      d.classList.toggle('active', i === current);
-    });
+  function go(idx) {
+    cur = Math.max(0, Math.min(idx, maxIdx));
+    track.style.transform = `translateX(-${cur * cardW()}px)`;
+    dotsEl.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === cur));
   }
 
-  prev.addEventListener('click', () => goTo(current - 1));
-  next.addEventListener('click', () => goTo(current + 1));
+  prev.addEventListener('click', () => go(cur - 1));
+  next.addEventListener('click', () => go(cur + 1));
 
-  // Touch / swipe
-  let touchStartX = 0;
-  track.parentElement.addEventListener('touchstart', e => {
-    touchStartX = e.changedTouches[0].clientX;
-  }, { passive: true });
+  // Touch swipe
+  let tx0 = 0;
+  track.parentElement.addEventListener('touchstart', e => { tx0 = e.changedTouches[0].clientX; }, { passive: true });
   track.parentElement.addEventListener('touchend', e => {
-    const dx = e.changedTouches[0].clientX - touchStartX;
-    if (Math.abs(dx) > 40) goTo(dx < 0 ? current + 1 : current - 1);
+    const dx = e.changedTouches[0].clientX - tx0;
+    if (Math.abs(dx) > 44) go(dx < 0 ? cur + 1 : cur - 1);
   }, { passive: true });
 
-  // Keyboard
-  document.addEventListener('keydown', e => {
-    if (e.key === 'ArrowLeft') goTo(current - 1);
-    if (e.key === 'ArrowRight') goTo(current + 1);
-  });
-
-  // Auto-advance (features carousel only)
-  if (trackId === 'features-track') {
-    setInterval(() => goTo(current < maxIndex ? current + 1 : 0), 5000);
+  if (autoplay) {
+    setInterval(() => go(cur < maxIdx ? cur + 1 : 0), autoplay);
   }
 }
 
-/* ─── FEATURES CAROUSEL ───────────────────────────────────────────────────── */
-createCarousel({
-  trackId: 'features-track',
-  prevId: 'feat-prev',
-  nextId: 'feat-next',
-  dotsId: 'feat-dots',
-  cardSelector: '.course-card',
-  visibleCount: Math.floor(window.innerWidth / 368),
-  gap: 28,
+// Courses
+makeCarousel({
+  trackId: 'courses-track', prevId: 'c-prev', nextId: 'c-next', dotsId: 'c-dots',
+  cardSel: '.ccard', perView: Math.max(1, Math.floor(window.innerWidth / 348)),
+  gapPx: 24, autoplay: 5500,
 });
 
-/* ─── TESTIMONIALS CAROUSEL ──────────────────────────────────────────────── */
-createCarousel({
-  trackId: 'testi-track',
-  prevId: 'testi-prev',
-  nextId: 'testi-next',
-  dotsId: 'testi-dots',
-  cardSelector: '.testi-card',
-  visibleCount: Math.floor(window.innerWidth / 608),
-  gap: 28,
+// Testimonials
+makeCarousel({
+  trackId: 'testi-track', prevId: 't-prev', nextId: 't-next', dotsId: 't-dots',
+  cardSel: '.tcard', perView: Math.max(1, Math.floor(window.innerWidth / 588)),
+  gapPx: 24, autoplay: 0,
 });
 
-/* ─── MOON PARALLAX ON SCROLL ─────────────────────────────────────────────── */
-(function initParallax() {
+
+/* ══════════════════════════════════════════════════════════════════════
+   9. MOON PARALLAX + EYE TRACKING
+   ══════════════════════════════════════════════════════════════════════ */
+(function initMoonInteractions() {
   const heroMoon = document.getElementById('hero-moon');
+
+  // Parallax on scroll
   let ticking = false;
-
   window.addEventListener('scroll', () => {
-    if (!ticking) {
-      requestAnimationFrame(() => {
-        const scrollY = window.scrollY;
-        if (heroMoon) {
-          heroMoon.style.transform = `translateY(${scrollY * 0.25}px)`;
-        }
-        ticking = false;
-      });
-      ticking = true;
-    }
+    if (ticking) return;
+    requestAnimationFrame(() => {
+      if (heroMoon) {
+        heroMoon.style.transform = `translateY(${window.scrollY * 0.22}px)`;
+      }
+      ticking = false;
+    });
+    ticking = true;
   }, { passive: true });
-})();
 
-/* ─── MOON EYES FOLLOW CURSOR ─────────────────────────────────────────────── */
-(function initEyeTracking() {
+  // Eye follow
   document.addEventListener('mousemove', e => {
-    document.querySelectorAll('.moon-face').forEach(face => {
-      const rect = face.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      const dx = e.clientX - cx;
-      const dy = e.clientY - cy;
+    document.querySelectorAll('.mm-face').forEach(face => {
+      const r = face.getBoundingClientRect();
+      const fcx = r.left + r.width / 2;
+      const fcy = r.top + r.height / 2;
+      const dx = e.clientX - fcx;
+      const dy = e.clientY - fcy;
       const dist = Math.sqrt(dx * dx + dy * dy);
-      const maxMove = 1.5;
-      const mx = dist > 0 ? (dx / dist) * Math.min(dist * 0.03, maxMove) : 0;
-      const my = dist > 0 ? (dy / dist) * Math.min(dist * 0.03, maxMove) : 0;
-
-      face.querySelectorAll('.moon-eye').forEach(eye => {
-        eye.style.transform = `translate(${mx}px, ${my}px)`;
+      const max = 1.4;
+      const mx = dist > 0 ? (dx / dist) * Math.min(dist * 0.025, max) : 0;
+      const my = dist > 0 ? (dy / dist) * Math.min(dist * 0.025, max) : 0;
+      face.querySelectorAll('.mm-eye').forEach(eye => {
+        eye.style.transform = `translate(${mx}px,${my}px)`;
       });
     });
   });
 })();
 
-/* ─── NIMITTA LIGHT PULSE ON HERO SCROLL ─────────────────────────────────── */
-(function initNimitta() {
-  const overlay = document.querySelector('.nimitta-overlay');
-  if (!overlay) return;
-  // Subtle pulse responding to scroll depth
-  let scrollRatio = 0;
-  window.addEventListener('scroll', () => {
-    scrollRatio = Math.min(window.scrollY / (document.body.scrollHeight * 0.3), 1);
-    overlay.style.opacity = 0.3 + scrollRatio * 0.5;
-  }, { passive: true });
-})();
 
-/* ─── MOON SMILE EXTRA BLINK ANIMATION ──────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════════════
+   10. MOON BLINK
+   ══════════════════════════════════════════════════════════════════════ */
 (function initBlink() {
   function blink(face) {
-    if (!face) return;
-    const eyes = face.querySelectorAll('.moon-eye');
-    // Squash eyes to simulate blink
-    eyes.forEach(e => { e.style.transform += ' scaleY(0.1)'; });
-    setTimeout(() => {
-      eyes.forEach(e => { e.style.transform = e.style.transform.replace(' scaleY(0.1)', ''); });
-    }, 120);
+    face.querySelectorAll('.mm-eye').forEach(e => {
+      const base = e.style.transform || '';
+      e.style.transform = base + ' scaleY(0.08)';
+      setTimeout(() => { e.style.transform = base; }, 110);
+    });
   }
-
-  function scheduleBlinkForFace(face) {
-    const delay = Math.random() * 4000 + 3000;
-    setTimeout(() => {
-      blink(face);
-      scheduleBlinkForFace(face);
-    }, delay);
+  function scheduleBlink(face) {
+    setTimeout(() => { blink(face); scheduleBlink(face); }, 3000 + Math.random() * 4500);
   }
+  document.querySelectorAll('.mm-face').forEach(face => scheduleBlink(face));
+})();
 
-  document.querySelectorAll('.moon-face').forEach(face => {
-    scheduleBlinkForFace(face);
+
+/* ══════════════════════════════════════════════════════════════════════
+   11. CARD AMBIENT GLOW (mouse-tracked radial)
+   ══════════════════════════════════════════════════════════════════════ */
+(function initCardGlow() {
+  const selector = '.ccard, .pcard, .tcard, .mcard, .mtile';
+  document.querySelectorAll(selector).forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const r = card.getBoundingClientRect();
+      const x = ((e.clientX - r.left) / r.width) * 100;
+      const y = ((e.clientY - r.top) / r.height) * 100;
+      card.style.background = `
+        radial-gradient(circle at ${x}% ${y}%, rgba(200,216,192,0.055) 0%, transparent 55%),
+        var(--bg-card)
+      `;
+    });
+    card.addEventListener('mouseleave', () => { card.style.background = ''; });
   });
 })();
 
-/* ─── STREAK COUNTER FLOATING ANIMATION ─────────────────────────────────── */
-(function initStreakGlow() {
-  const streakNum = document.querySelector('.streak-number');
-  if (!streakNum) return;
 
-  const glowObs = new IntersectionObserver(entries => {
-    if (entries[0].isIntersecting) {
-      // Add a pulsing glow once visible
-      streakNum.style.animation = 'none';
-      let pulseCount = 0;
-      const interval = setInterval(() => {
-        streakNum.style.filter = pulseCount % 2 === 0
-          ? 'drop-shadow(0 0 20px rgba(61,186,126,0.8))'
-          : 'drop-shadow(0 0 6px rgba(61,186,126,0.3))';
-        pulseCount++;
-        if (pulseCount > 6) {
-          clearInterval(interval);
-          streakNum.style.filter = '';
-        }
-      }, 200);
-      glowObs.unobserve(streakNum);
+/* ══════════════════════════════════════════════════════════════════════
+   12. PITI SPARK BURST on primary button hover
+   ══════════════════════════════════════════════════════════════════════ */
+(function initSparks() {
+  const kf = document.createElement('style');
+  kf.textContent = `
+    @keyframes spark-out {
+      0%   { transform: translate(0,0) scale(0); opacity:1; }
+      70%  { opacity:0.8; }
+      100% { transform: translate(var(--spx),var(--spy)) scale(1.4); opacity:0; }
     }
-  }, { threshold: 0.5 });
-  glowObs.observe(streakNum);
+  `;
+  document.head.appendChild(kf);
+
+  document.querySelectorAll('.btn--forest').forEach(btn => {
+    btn.addEventListener('mouseenter', () => {
+      for (let i = 0; i < 7; i++) {
+        const sp = document.createElement('span');
+        sp.textContent = Math.random() < 0.5 ? '✦' : '✧';
+        const spx = (Math.random() - 0.5) * 48;
+        const spy = (Math.random() - 0.7) * 48;
+        sp.style.cssText = `
+          position:absolute;
+          color:${Math.random() < 0.5 ? C.goldBright : C.silverBright};
+          font-size:${7 + Math.random() * 7}px;
+          pointer-events:none; z-index:20;
+          left:${15 + Math.random() * 70}%; top:${10 + Math.random() * 80}%;
+          --spx:${spx}px; --spy:${spy}px;
+          animation: spark-out 0.65s ease forwards;
+          filter: drop-shadow(0 0 3px ${C.gold});
+        `;
+        btn.appendChild(sp);
+        setTimeout(() => sp.remove(), 700);
+      }
+    });
+  });
 })();
 
-/* ─── SMOOTH ACTIVE NAV HIGHLIGHT ────────────────────────────────────────── */
-(function initActiveNav() {
-  const sections = document.querySelectorAll('section[id]');
-  const navAnchors = document.querySelectorAll('.nav__links a[href^="#"]');
 
-  const sectionObs = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        navAnchors.forEach(a => {
-          a.style.color = a.getAttribute('href') === '#' + entry.target.id
-            ? COLORS.silver
-            : '';
+/* ══════════════════════════════════════════════════════════════════════
+   13. ACTIVE NAV HIGHLIGHT
+   ══════════════════════════════════════════════════════════════════════ */
+(function initNavHighlight() {
+  const sections = document.querySelectorAll('section[id]');
+  const navAs = document.querySelectorAll('.nav__links a[href^="#"]');
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navAs.forEach(a => {
+          a.style.color = a.getAttribute('href') === '#' + e.target.id
+            ? C.silverBright : '';
         });
       }
     });
   }, { threshold: 0.4 });
 
-  sections.forEach(s => sectionObs.observe(s));
+  sections.forEach(s => obs.observe(s));
 })();
 
-/* ─── PITI SPARKLE BURST ON CTA HOVER ───────────────────────────────────── */
-(function initPitiBurst() {
-  document.querySelectorAll('.btn--primary').forEach(btn => {
-    btn.addEventListener('mouseenter', () => {
-      for (let i = 0; i < 6; i++) {
-        const spark = document.createElement('span');
-        spark.textContent = Math.random() < 0.5 ? '✦' : '✧';
-        spark.style.cssText = `
-          position: absolute;
-          color: ${Math.random() < 0.5 ? COLORS.gold : COLORS.silver};
-          font-size: ${8 + Math.random() * 8}px;
-          pointer-events: none;
-          z-index: 999;
-          left: ${20 + Math.random() * 60}%;
-          top: ${10 + Math.random() * 80}%;
-          animation: spark-pop 0.6s ease forwards;
-          filter: drop-shadow(0 0 4px ${COLORS.gold});
-        `;
-        btn.appendChild(spark);
-        setTimeout(() => spark.remove(), 700);
-      }
-    });
-  });
 
-  // Add the spark-pop keyframe dynamically
-  const style = document.createElement('style');
-  style.textContent = `
-    @keyframes spark-pop {
-      0%   { transform: translate(0,0) scale(0); opacity: 1; }
-      60%  { opacity: 1; }
-      100% { transform: translate(${randomDir()}px, ${randomDir()}px) scale(1.5); opacity: 0; }
-    }
-  `;
-  document.head.appendChild(style);
-
-  function randomDir() { return (Math.random() - 0.5) * 40; }
-})();
-
-/* ─── COURSE CARD GLOW MOUSE TRACKING ───────────────────────────────────── */
-(function initCardGlowTrack() {
-  document.querySelectorAll('.course-card, .commitment__card, .testi-card').forEach(card => {
-    card.addEventListener('mousemove', e => {
-      const rect = card.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 100;
-      const y = ((e.clientY - rect.top) / rect.height) * 100;
-      card.style.setProperty('--mx', x + '%');
-      card.style.setProperty('--my', y + '%');
-      card.style.background = `
-        radial-gradient(circle at ${x}% ${y}%, rgba(192,200,216,0.06) 0%, transparent 60%),
-        var(--card-bg)
-      `;
-    });
-    card.addEventListener('mouseleave', () => {
-      card.style.background = '';
-    });
-  });
-})();
-
-/* ─── MOON ROTATION ON SCROLL ────────────────────────────────────────────── */
-(function initMoonRotation() {
-  const moons = document.querySelectorAll('.logo-moon, .about__big-moon');
+/* ══════════════════════════════════════════════════════════════════════
+   14. MOONLIGHT WASH SCROLL RESPONSE
+   ══════════════════════════════════════════════════════════════════════ */
+(function initWashParallax() {
+  const wash = document.querySelector('.moonlight-wash');
+  if (!wash) return;
   window.addEventListener('scroll', () => {
-    const scrollY = window.scrollY;
-    moons.forEach(m => {
-      const rotation = (scrollY * 0.05) % 360;
-      m.style.setProperty('--moon-rot', rotation + 'deg');
-    });
+    const ratio = Math.min(window.scrollY / (document.body.scrollHeight * 0.25), 1);
+    wash.style.opacity = 0.5 + ratio * 0.4;
   }, { passive: true });
 })();
 
-/* ─── FOOTER MOON DRIFT ──────────────────────────────────────────────────── */
-(function initFooterMoonDrift() {
-  const footerMoon = document.querySelector('.footer .logo-moon');
-  if (!footerMoon) return;
-  let hovered = false;
-  footerMoon.addEventListener('mouseenter', () => {
-    hovered = true;
-    let angle = 0;
-    const drift = setInterval(() => {
-      if (!hovered) { clearInterval(drift); return; }
-      angle += 2;
-      footerMoon.style.transform = `rotate(${angle}deg)`;
-    }, 16);
-    footerMoon.addEventListener('mouseleave', () => {
-      hovered = false;
-      footerMoon.style.transform = '';
-    }, { once: true });
-  });
-})();
 
-/* ─── SUBTLE AUDIO HINT (silent — just prepares for future use) ──────────── */
-// No audio autoplay — respects user preference. Reserved for future ambient bell feature.
-
-/* ─── PAGE LOAD COMPLETE ─────────────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════════════
+   15. SMOOTH FADE-IN ON LOAD
+   ══════════════════════════════════════════════════════════════════════ */
 window.addEventListener('load', () => {
   document.body.style.opacity = '0';
-  document.body.style.transition = 'opacity 0.8s ease';
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      document.body.style.opacity = '1';
-    });
-  });
+  document.body.style.transition = 'opacity 0.9s ease';
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    document.body.style.opacity = '1';
+  }));
 });
