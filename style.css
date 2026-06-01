@@ -3005,6 +3005,7 @@ strong {
 
   .hamburger {
     display: flex;
+    z-index: 1001;
   }
 
   .hero {
