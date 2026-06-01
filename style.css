@@ -1773,8 +1773,6 @@ strong {
   color: var(--gold-bright);
 }
 
-.ccard__meter {}
-
 .ccard__meter span {
   font-size: 0.73rem;
   color: var(--text-dim);
