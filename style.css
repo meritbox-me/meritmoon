@@ -1123,10 +1123,10 @@ strong {
 
 .hero__headline {
   font-family: var(--font-serif);
-  font-size: clamp(2.5rem, 6.5vw, 4.6rem);
+  font-size: clamp(2rem, 5.2vw, 3.6rem);
   font-weight: 600;
   line-height: 1.08;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   display: flex;
   flex-direction: column;
   gap: 0.05em;
@@ -1191,12 +1191,6 @@ strong {
 
   .mb3 {
     left: 82%;
-  }
-}
-
-@media (min-width: 1200px) {
-  .hero__headline {
-    font-size: clamp(2.8rem, 4.2vw, 5rem);
   }
 }
 
@@ -2926,6 +2920,10 @@ strong {
   color: var(--silver);
 }
 
+.mobile-only {
+  display: none
+}
+
 /* ── RESPONSIVE ─────────────────────────────────────────────────────────── */
 @media (max-width: 1060px) {
   :root {
@@ -3014,7 +3012,7 @@ strong {
   }
 
   .hero__headline {
-    font-size: clamp(2.2rem, 9vw, 3.2rem);
+    font-size: clamp(2.2rem, 8vw, 3.2rem);
   }
 
   .hero__visual {
@@ -3105,6 +3103,10 @@ strong {
 
   .footer__nav {
     grid-template-columns: 1fr;
+  }
+
+  .mobile-only {
+    display: block;
   }
 }
 
