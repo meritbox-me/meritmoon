@@ -1452,8 +1452,15 @@ strong {
   text-transform: uppercase;
 }
 
+.pcard__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .pcard__icon {
   margin-bottom: 20px;
+  height: 50px;
 }
 
 .leaf-icon {
